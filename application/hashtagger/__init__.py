@@ -131,5 +131,4 @@ def start_process(users, user_db):
                          total=POST_LIMIT, user_db=user_db
                          )
         api_lookup[username].logout()
-        logging.info("%s %s logged out." % (username, "has not" if api_lookup[username].isLoggedIn else "has"))
     return post_return

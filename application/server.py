@@ -29,9 +29,11 @@ jobs = []
 
 
 def run_process():
+    users = []
     with db_session:
-        users = select(u for u in User)[:]
-        start_process(users, User)
+        users.append(select(u for u in User)[:])
+
+    start_process(users[0], User)
 
 
 @app.route('/')
