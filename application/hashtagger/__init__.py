@@ -45,8 +45,8 @@ def generate_history(username, message="", comment_success=0, like_success=0, to
               (username, message, comment_success, like_success, total))
 
 
-from application.hashtagger import HashtaggerLiker
-from application.hashtagger import HashtaggerCommenter
+from application.hashtagger.HashtaggerLiker import HashtaggerLiker
+from application.hashtagger.HashtaggerCommenter import HashtaggerCommenter
 
 
 def start_process(users, user_db):
