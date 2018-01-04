@@ -1,0 +1,8 @@
+flask
+pony
+pywebview
+requests
+requests-toolbelt
+moviepy
+gunicorn
+Flask-APScheduler
