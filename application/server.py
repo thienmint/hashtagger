@@ -133,7 +133,7 @@ def next_run_time():
 
 # Make a scheduler
 scheduler = APScheduler()
-jobs.append(scheduler.scheduler.add_job(run_process, 'interval', minutes=5, name='like_comment_job', max_instances=1))
+jobs.append(scheduler.scheduler.add_job(run_process, 'interval', minutes=60, name='like_comment_job', max_instances=1))
 scheduler.init_app(app)
 logging.info("Going to start the application now!")
 scheduler.start()
