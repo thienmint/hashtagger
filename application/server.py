@@ -135,7 +135,8 @@ def next_run_time():
 
 # Make a scheduler
 scheduler = APScheduler()
-jobs.append(scheduler.scheduler.add_job(run_process, 'interval', minutes=60, name='like_comment_job', max_instances=1))
+jobs.append(scheduler.scheduler.add_job(run_process, 'interval', minutes=60,
+                                        name='like_comment_job', max_instances=1, coalesce=True))
 scheduler.init_app(app)
 logging.info("Going to start the application now!")
 scheduler.start()
@@ -143,5 +144,3 @@ scheduler.start()
 if __name__ == '__main__':
     threading.Timer(3, lambda: webbrowser.open(url='http://localhost:5000/')).start()
     app.run(host="127.0.0.1", port=5000, threaded=True, debug=False)
-
-

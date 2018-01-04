@@ -5,6 +5,7 @@ from pony.orm import *
 import random
 import logging
 import time
+import requests
 
 # Number of Instagram post to like/comment per hour interval
 POST_LIMIT = 25
@@ -23,22 +24,30 @@ comment_results = dict()
 
 
 def get_time():
-    return time.strftime("%H:%M - %m/%d/%y")
+    r = requests.get('http://www.convert-unix-time.com/api?timestamp=now&timezone=new_york&format=english12')
+    return r.json()['localDate']
 
 
-def generate_history(username, message="", comment_success=0, like_success=0, total=0, user_db=None):
+def generate_history(username, message="", comment_success=0, like_success=0, total=0, user_db=None, user_output=None):
     if user_db is None:
         logging.warning("No user_db given")
     else:
         with db_session:
             user = user_db.get(username=username)
+            all_messages = [message]
+            if user_output is not None:
+                if user_output['banned_comment']:
+                    all_messages.append("Spam filter has banned some of the comments, causing it to fail.")
+                if user_output['exceed_limits']:
+                    all_messages.append("The script has exceeded the limit number of API calls")
+
             user.history['info'].append(
                 {
                     'time_completion': get_time(),
                     'comment_success': comment_success,
                     'like_success': like_success,
                     'total': total,
-                    'message': message
+                    'message': '<br/>'.join(all_messages)
                 })
             logging.info("Updated history for %s" % username)
         logging.info('%s: %s | comment = %s | like = %s | total = %s' %
@@ -128,7 +137,7 @@ def start_process(users, user_db):
         generate_history(username, "Completed.",
                          like_success=like_result[0] if like_result is not None else 0,
                          comment_success=comment_result[0] if comment_result is not None else 0,
-                         total=POST_LIMIT, user_db=user_db
+                         total=POST_LIMIT, user_db=user_db, user_output=post_return[username]
                          )
         api_lookup[username].logout()
     return post_return
