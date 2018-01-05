@@ -91,6 +91,19 @@ def verify():
     return jsonify(200)
 
 
+@app.route('/unverify', methods=['POST'])
+def unverify():
+    data = request.get_json()
+
+    with db_session:
+        try:
+            user = User.get(username=data['username'])
+            user.verified = False
+        except Exception:
+            return jsonify(400)
+    return jsonify(200)
+
+
 @app.route('/edit', methods=["POST"])
 def edit():
     data = request.get_json()

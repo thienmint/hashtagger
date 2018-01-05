@@ -104,6 +104,7 @@
                         <tr>
                             <td align="center">
                                 <a class="btn btn-success" id="insta_verify"><em class="fa fa-check"></em></a>
+                                <a class="btn btn-success" id="insta_unverify"><em class="fa fa-square"></em></a>
                                 <a class="btn btn-default edit_insta"><em class="fa fa-pencil"></em></a>
                                 <a class="btn btn-info" id="history"><em class="fa fa-history"></em></a>
                                 <a class="btn btn-danger" id="remove_insta"><em class="fa fa-trash"></em></a>
@@ -194,6 +195,45 @@
                 }
                 else {
                     $("#feedback").html("Has problem logging in. Could be bad credentials or API call failure.");
+                    $("#feedback").slideDown(function() {
+                        setTimeout(function() {
+                            $("#feedback").slideUp();
+                        }, 3000);
+                    });
+                }
+            },
+
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+	});
+
+	$(document).on("click", "#insta_unverify", function(){
+        $("#feedback").html("Unverifying user...").show();
+        var row = $(this).closest('tr');
+        var username = row.find('.user-username').text();
+        $.ajax({
+            type : 'POST',
+            url : "/unverify",
+            contentType: 'application/json;charset=UTF-8',
+            data : JSON.stringify({"username": username}),
+
+            success: function(response) {
+                if(response === 200) {
+                    $("#feedback").html('User unverified');
+                    $("#feedback").slideDown(function() {
+                        setTimeout(function() {
+                            $("#feedback").slideUp();
+                        }, 3000);
+                    });
+                    setTimeout(function(){
+                        location.reload();
+                    }, 1000);
+                }
+                else {
+                    $("#feedback").html("Operational error. Try again!");
                     $("#feedback").slideDown(function() {
                         setTimeout(function() {
                             $("#feedback").slideUp();
