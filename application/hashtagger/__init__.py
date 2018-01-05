@@ -10,7 +10,7 @@ import requests
 # Number of Instagram post to like/comment per hour interval
 POST_LIMIT = 80
 # 8s interval between each comment posting and/or exceeding_limit count
-WAITING_INTERVAL = 8
+WAITING_INTERVAL = 15
 # FAILURE_ALLOWANCE: how many number of failures before it halts failing liking/commenting thread overall
 FAILURE_ALLOWANCE = dict(like=10, comment=80)
 # Like_threads: keep a list of all the HashtaggerLiker threads created
