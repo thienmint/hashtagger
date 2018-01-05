@@ -8,11 +8,11 @@ import time
 import requests
 
 # Number of Instagram post to like/comment per hour interval
-POST_LIMIT = 80
+POST_LIMIT = 30
 # 8s interval between each comment posting and/or exceeding_limit count
 WAITING_INTERVAL = 15
 # FAILURE_ALLOWANCE: how many number of failures before it halts failing liking/commenting thread overall
-FAILURE_ALLOWANCE = dict(like=10, comment=80)
+FAILURE_ALLOWANCE = dict(like=12, comment=12)
 # Like_threads: keep a list of all the HashtaggerLiker threads created
 # Like_results: keep the results for each thread that is liking posts
 like_threads = dict()
@@ -90,8 +90,8 @@ def start_process(users, user_db):
         # If this operation fails, we simply skip the user as well. This could be because
         # LastJson doesn't have the required keys or data structure. Check with the API again.
         try:
-            # sample_ids = [item['pk'] for item in random.sample(api.LastJson['items'], POST_LIMIT)]
-            sample_ids = [item['pk'] for item in api.LastJson['items']]
+            IDS = api.LastJson['items']
+            sample_ids = [item['pk'] for item in random.sample(IDS, POST_LIMIT if len(IDS) >= POST_LIMIT else len(IDS))]
         except Exception as e:
             user_output['fail_operation'] = True
             logging.error(e)
