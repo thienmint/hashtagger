@@ -8,11 +8,11 @@ import time
 import requests
 
 # Number of Instagram post to like/comment per hour interval
-POST_LIMIT = 25
+POST_LIMIT = 80
 # 8s interval between each comment posting and/or exceeding_limit count
-WAITING_INTERVAL = 30
+WAITING_INTERVAL = 8
 # FAILURE_ALLOWANCE: how many number of failures before it halts failing liking/commenting thread overall
-FAILURE_ALLOWANCE = dict(like=10, comment=10)
+FAILURE_ALLOWANCE = dict(like=10, comment=80)
 # Like_threads: keep a list of all the HashtaggerLiker threads created
 # Like_results: keep the results for each thread that is liking posts
 like_threads = dict()
@@ -90,7 +90,8 @@ def start_process(users, user_db):
         # If this operation fails, we simply skip the user as well. This could be because
         # LastJson doesn't have the required keys or data structure. Check with the API again.
         try:
-            sample_ids = [item['pk'] for item in random.sample(api.LastJson['items'], POST_LIMIT)]
+            # sample_ids = [item['pk'] for item in random.sample(api.LastJson['items'], POST_LIMIT)]
+            sample_ids = [item['pk'] for item in api.LastJson['items']]
         except Exception as e:
             user_output['fail_operation'] = True
             logging.error(e)
@@ -137,7 +138,7 @@ def start_process(users, user_db):
         generate_history(username, "Completed.",
                          like_success=like_result[0] if like_result is not None else 0,
                          comment_success=comment_result[0] if comment_result is not None else 0,
-                         total=POST_LIMIT, user_db=user_db, user_output=post_return[username]
+                         total=like_result[1], user_db=user_db, user_output=post_return[username]
                          )
         api_lookup[username].logout()
     return post_return
