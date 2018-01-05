@@ -22,8 +22,8 @@ app.config.from_object(__name__)
 app.config.update(dict(
     SECRET_KEY='development key'
 ))
-app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SCHEDULER_API_ENABLED'] = True
+app.config['DEBUG'] = False
 # Keeping a list of job (should be only 1)
 jobs = []
 
@@ -134,7 +134,7 @@ def next_run_time():
 
 
 # Make a scheduler
-scheduler = APScheduler()
+scheduler = APScheduler.add_job()
 jobs.append(scheduler.scheduler.add_job(run_process, 'interval', minutes=60,
                                         name='like_comment_job', max_instances=1, coalesce=True))
 scheduler.init_app(app)
