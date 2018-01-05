@@ -1,1 +1,1 @@
-web: gunicorn application.server:app --capture-output
+web: gunicorn --workers=1 application.server:app --capture-output
