@@ -31,7 +31,7 @@ jobs = []
 def run_process():
     users = []
     with db_session:
-        users.append(select(u for u in User)[:])
+        users.append(select(u for u in User if u.verified)[:])
 
     start_process(users[0], User)
 
